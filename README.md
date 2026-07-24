@@ -31,6 +31,32 @@ npm run lint        # eslint
 The topbar's reset icon (↺) restores the original seed data at any time — useful between demo
 runs, since every action in the app writes to `localStorage`.
 
+## Deployment (GitHub Pages)
+
+The repo ships with a GitHub Actions workflow (`.github/workflows/deploy.yml`) that builds and
+publishes to GitHub Pages on every push to `main`.
+
+1. Create an empty repository on GitHub named `Onboarding` (no README/license — this repo already
+   has one), then push:
+   ```bash
+   git remote add origin https://github.com/<your-username>/Onboarding.git
+   git push -u origin main
+   ```
+2. In the repo's **Settings → Pages**, set "Source" to **GitHub Actions** (one-time setup).
+3. The workflow runs automatically and publishes to `https://<your-username>.github.io/Onboarding/`.
+   Check the **Actions** tab for build status; the first run takes a minute or two.
+
+Two things are already handled for this to work correctly:
+- `vite.config.ts` sets `base: '/Onboarding/'` for production builds only (local dev stays at `/`).
+  If you rename the repo, update this to match.
+- `npm run build` copies `index.html` to `404.html` after building, so client-side routes
+  (e.g. `/journeys/anna-mueller`) survive a direct link or a page reload on GitHub Pages, which has
+  no server-side rewrites of its own.
+
+To deploy elsewhere (Vercel, Netlify, Cloudflare Pages), none of this is needed — set `base` back
+to `/` (or drop the option) and just point the host at `npm run build` / `dist`; those platforms
+handle SPA routing automatically.
+
 ## Project structure
 
 ```
